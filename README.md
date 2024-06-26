@@ -1,1 +1,1 @@
-# odin-tic-tac-toe
+A project issued in the JavaScript section of The Odin Project, focusing on encapsulation, factory functions, and using JavaScript to bring interactivity to life in game format on a webpage. The final version of this project includes visual gameplay instead of console only gameplay with win/lose conditions and the ability to start and restart the game.
