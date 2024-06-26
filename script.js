@@ -11,6 +11,21 @@ const gameboard = (function() {
     // 3 4 5
     // 6 7 8
 
+    const clearBoard = () => {
+        for (let i = 0; i < 9; i++) {
+            board[i] = "Null";
+        }
+    }
+
+    const detectBoardFill = () => {
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === "Null") {
+                return false;
+            }
+        }
+        return true;
+    }
+
     const detectMatches = (position) => {
         if (board[position] !== "Null") {
             if (position === 0) {
@@ -47,13 +62,20 @@ const gameboard = (function() {
                     return "Win";
                 }
             }
+
+            if (detectBoardFill()) {
+                return "Draw";
+            }
+            else {
+                return "No match";
+            }
         }
         else {
-            return "Lose";
+            return "No match";
         }
     }
 
-    return { board, detectMatches };
+    return { board, detectMatches, clearBoard };
 });
 
 const player = (function() {
@@ -97,6 +119,14 @@ const game = (function() {
         for (let i = 0; i < 7; i++) {
             if (gameBoard.detectMatches(i) === "Win") {
                 winState = "Win";
+                gameBoard.clearBoard();
+                console.log("Cleared board");
+                break;
+            }
+            else if (gameBoard.detectMatches() === "Draw") {
+                winState = "Draw";
+                gameBoard.clearBoard();
+                console.log("Cleared board");
                 break;
             }
             else {
@@ -129,8 +159,11 @@ const game = (function() {
             if (checkGame() === "Win") {
                 xPlayer.incPoints();
                 console.log("Player X wins");
+                currTurn = "X";
             }
-            currTurn = "O";
+            else {
+                currTurn = "O";
+            }
         }
         else {
             gameBoard.board[position] = "O";
