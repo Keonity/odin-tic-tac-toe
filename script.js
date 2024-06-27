@@ -1,4 +1,5 @@
 const gameboard = (function() {
+    let spaceCounter = 0;
     board = new Array(9);
 
     for (let i = 0; i < 9; i++) {
@@ -11,10 +12,33 @@ const gameboard = (function() {
     // 3 4 5
     // 6 7 8
 
+    const createSpace = () => {
+        const gameBody = document.querySelector(".gameBody");
+
+        const space = document.createElement("input");
+        space.setAttribute("class", "space");
+        space.setAttribute("id", spaceCounter++);
+        space.setAttribute("type", "button");
+        space.addEventListener("click", (e) => {
+            // console.log(e.target.id);
+            game.takeTurn(e.target.id);
+        });
+
+        gameBody.appendChild(space);
+    }
+
     const clearBoard = () => {
+
+        const gameboardParent = document.querySelector(".gameBody");
+        while (gameboardParent.firstChild) {
+            gameboardParent.removeChild(gameboardParent.lastChild);
+        }
+
         for (let i = 0; i < 9; i++) {
             board[i] = "Null";
+            createSpace();
         }
+        spaceCounter = 0;
     }
 
     const detectBoardFill = () => {
@@ -75,7 +99,7 @@ const gameboard = (function() {
         }
     }
 
-    return { board, detectMatches, clearBoard };
+    return { board, detectMatches, clearBoard, createSpace };
 });
 
 const player = (function() {
@@ -120,27 +144,21 @@ const game = (function() {
             if (gameBoard.detectMatches(i) === "Win") {
                 winState = "Win";
                 gameBoard.clearBoard();
-                console.log("Cleared board");
+                console.log("Reset Game");
                 break;
             }
             else if (gameBoard.detectMatches() === "Draw") {
                 winState = "Draw";
                 gameBoard.clearBoard();
-                console.log("Cleared board");
+                console.log("Reset Game");
                 break;
             }
             else {
-                winState = "Lose";
+                // winState = "Lose";
             }
         }
-        // Uses Detect Matches function from gameboard object
+
         return winState;
-        /* if (gameBoard.board[0] === "X" && gameBoard.board[1] === "X" && gameBoard.board[2] === "X") {
-            return "Win";
-        }
-        else {
-            return "Lose";
-        } */
     }
 
     const takeTurn = (position) => {
@@ -156,6 +174,8 @@ const game = (function() {
 
         if (currTurn === "X") {
             gameBoard.board[position] = "X";
+            const xPlace = document.getElementById(position);
+            xPlace.setAttribute("value", "X");
             if (checkGame() === "Win") {
                 xPlayer.incPoints();
                 console.log("Player X wins");
@@ -166,6 +186,8 @@ const game = (function() {
             }
         }
         else {
+            const oPlace = document.getElementById(position);
+            oPlace.setAttribute("value", "O");
             gameBoard.board[position] = "O";
             if (checkGame() === "Win") {
                 oPlayer.incPoints();
@@ -177,7 +199,20 @@ const game = (function() {
         return checkGame();
     }
 
-    return { gameBoard, checkGame, takeTurn };
+    const getScores = () => {
+        console.log(`X Player: ${xPlayer.getPoints()}, O Player: ${oPlayer.getPoints()}`);
+    }
+
+    return { gameBoard, checkGame, takeTurn, getScores };
 })();
 
 let newGame = game;
+newGame.gameBoard.clearBoard();
+
+/* const gameBody = document.querySelector(".gameBody");
+
+const space0 = document.createElement("input");
+space0.setAttribute("class", "space");
+
+
+gameBody.appendChild(space0); */
