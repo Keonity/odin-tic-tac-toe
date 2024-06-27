@@ -104,6 +104,7 @@ const gameboard = (function() {
 
 const player = (function() {
     let symbol = "X";
+    let name = "";
     let points = 0;
     let isTurn = false;
 
@@ -111,11 +112,21 @@ const player = (function() {
         symbol = playerSymbol;
     }
 
+    const setName = (playerName) => {
+        name = playerName;
+    }
+
+    const getName = () => { return name };
+
+    const setPoints = (playerPoints) => {
+        points = playerPoints;
+    }
+
     const getPoints = () => { return points };
 
     const incPoints = () => { points++ };
 
-    return { setSymbol, getPoints, incPoints, isTurn };
+    return { setSymbol, setName, getName, setPoints, getPoints, incPoints, isTurn };
 });
 
 const game = (function() {
@@ -131,9 +142,14 @@ const game = (function() {
 
     const xPlayer = player();
     xPlayer.setSymbol("X");
+    xPlayer.setName("Player 1");
 
     const oPlayer = player();
     oPlayer.setSymbol("O");
+    oPlayer.setName("Player 2");
+
+    const xPlayerScore = document.querySelector("#p1Score");
+    const oPlayerScore = document.querySelector("#p2Score");
 
     const gameBoard = gameboard();
 
@@ -164,8 +180,8 @@ const game = (function() {
     const takeTurn = (position) => {
         while (true) {
             if (gameBoard.board[position] === "X" || gameBoard.board[position] === "O" ){
-                console.log("Please pick an empty space.");
-                position = parseInt(prompt("Please pick an empty space."));
+                alert("Please pick an empty space.");
+                return;
             }
             else {
                 break;
@@ -179,6 +195,8 @@ const game = (function() {
             if (checkGame() === "Win") {
                 xPlayer.incPoints();
                 console.log("Player X wins");
+                alert(`Winner: ${xPlayer.getName()}`);
+                xPlayerScore.textContent = `Score: ${xPlayer.getPoints()}`;
                 currTurn = "X";
             }
             else {
@@ -192,6 +210,8 @@ const game = (function() {
             if (checkGame() === "Win") {
                 oPlayer.incPoints();
                 console.log("Player O wins");
+                alert(`Winner: ${oPlayer.getName()}`);
+                oPlayerScore.textContent = `Score: ${xPlayer.getPoints()}`;
             }
             currTurn = "X";
         }
@@ -203,11 +223,35 @@ const game = (function() {
         console.log(`X Player: ${xPlayer.getPoints()}, O Player: ${oPlayer.getPoints()}`);
     }
 
-    return { gameBoard, checkGame, takeTurn, getScores };
+
+    const xPlayerName = document.querySelector("#p1Name");
+    xPlayerName.addEventListener("change", (e) => {
+        xPlayer.setName(e.target.value);
+    });
+
+    const oPlayerName = document.querySelector("#p2Name");
+    oPlayerName.addEventListener("change", (e) => {
+        oPlayer.setName(e.target.value);
+    });
+
+    const resetGameBtn = document.querySelector("#resetBtn");
+    resetGameBtn.addEventListener("click", (e) => {
+        gameBoard.clearBoard();
+        xPlayerName.setAttribute("value", "Player 1");
+        oPlayerName.setAttribute("value", "Player 2");
+        xPlayer.setName("Player 1");
+        xPlayer.setPoints(0);
+        oPlayer.setName("Player 2");
+        oPlayer.setPoints(0);
+        xPlayerScore.textContent = "Score: 0";
+        oPlayerScore.textContent = "Score: 0";
+    });
+
+    return { gameBoard, checkGame, takeTurn, getScores, xPlayer, oPlayer };
 })();
 
-let newGame = game;
-newGame.gameBoard.clearBoard();
+let ticTacToeGame = game;
+ticTacToeGame.gameBoard.clearBoard();
 
 /* const gameBody = document.querySelector(".gameBody");
 

@@ -9,8 +9,19 @@
 <body>
     <div class="header">
         <h1>Odin Tic-Tac-Toe</h1>
+        <input type="button" value="Start/Reset Game" id="resetBtn">
     </div>
-    <div class="gameBody"></div>
+    <div class="gameContainer">
+        <div class="player" id="p1">
+            <input type="text" value="Player 1" id="p1Name">
+            <p id="p1Score">Score: 0</p>
+        </div>
+        <div class="gameBody"></div>
+        <div class="player" id="p2">
+            <input type="text" value="Player 2" id="p2Name">
+            <p id="p2Score">Score: 0</p>
+        </div>
+    </div>
     <div class="footer">
         <p>Made For The Odin Project</p>
     </div>
